@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   FlatList,
@@ -8,11 +8,15 @@ import {
   StyleSheet,
 } from 'react-native';
 
-export default function Repository({ data }) {
-  const { id, likes, techs, title, url } = data;
+import api from '../services/api';
 
-  async function handleLikeRepository(id) {
-    // Implement "Like Repository" functionality
+export default function Repository({ data }) {
+  const { id, techs, title, url } = data;
+  const [likes, setLikes] = useState(data.likes);
+
+  async function handleLikeRepository() {
+    const response = await api.post(`repositories/${id}/like`);
+    setLikes(response.data.likes);
   }
 
   return (
@@ -38,7 +42,7 @@ export default function Repository({ data }) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => handleLikeRepository(1)}
+        onPress={handleLikeRepository}
         testID={`like-button-${id}`}
       >
         <Text style={styles.buttonText}>Curtir</Text>
